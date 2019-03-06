@@ -1,12 +1,13 @@
 class Art:
-  def __init__(self, artist, title, medium, year):
+  def __init__(self, artist, title, medium, year, owner):
     self.artist = artist
     self.title = title
     self.medium = medium
     self.year = year
+    self.owner = owner
     
   def __repr__(self):
-    return "{0}. \"{1}\". {2}, {3}.".format(self.artist, self.title, self.year, self.medium)
+    return "{0}. \"{1}\". {2}, {3}. {4}, {5}.".format(self.artist, self.title, self.year, self.medium, self.owner.name, self.owner.location)
   
 class Marketplace:
   def __init__(self):
@@ -16,7 +17,7 @@ class Marketplace:
     self.listings.append(new_listing)
     
   def remove_listing(self, expired_listing):
-    self.listings.pop(expired_listing)
+    self.listings.remove(expired_listing)
     
   def show_listings(self):
     for listing in self.listings:
@@ -30,13 +31,47 @@ class Client:
       self.location = location
     else:
       self.location = "Private Collection"
+      
+  def sell_artwork(self, artwork, price):
+    if artwork.owner == self:
+      new_listing = Listing(artwork,price,self)
+    veneer.add_listing(new_listing)
+    
+  def buy_artwork(self, artwork):
+    if artwork.owner != self:
+      art_listing = None
+      for listing in veneer.listings:
+        if listing.art == artwork:
+          art_listing = listing
+          break
+      if art_listing != None:
+        art_listing.art.owner = self
+        veneer.remove_listing(art_listing)
+      
+    
   
-girl_with_mandolin = Art("Picasso, Pablo", "Girl with a Mandlin (Fanny Tellier)", "oil on canvas", 1910)
-
-print(girl_with_mandolin)
+class Listing:
+  def __init__(self, art, price, seller):
+    self.art = art
+    self.price = price
+    self.seller = seller
+    
+  def __repr__(self):
+    return self.art.title + ", and price of that art is " + self.price
+  
 
 veneer = Marketplace()
 print(veneer.show_listings())
 
 edytta = Client("Edytta  Halpirt", None, False)
+girl_with_mandolin = Art("Picasso, Pablo", "Girl with a Mandlin (Fanny Tellier)", "oil on canvas", 1910, edytta)
+print(girl_with_mandolin)
+
 moma = Client("The MOMA", "New York", True)
+
+edytta.sell_artwork(girl_with_mandolin,'$6M (USD)')
+veneer.show_listings()
+
+moma.buy_artwork(girl_with_mandolin)
+print(girl_with_mandolin)
+veneer.show_listings()
