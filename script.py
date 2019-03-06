@@ -21,6 +21,15 @@ class Marketplace:
   def show_listings(self):
     for listing in self.listings:
       print(listing)
+      
+class Client:
+  def __init__(self, name, location, is_museum):
+    self.name = name
+    self.is_museum = is_museum
+    if is_museum:
+      self.location = location
+    else:
+      self.location = "Private Collection"
   
 girl_with_mandolin = Art("Picasso, Pablo", "Girl with a Mandlin (Fanny Tellier)", "oil on canvas", 1910)
 
@@ -28,3 +37,6 @@ print(girl_with_mandolin)
 
 veneer = Marketplace()
 print(veneer.show_listings())
+
+edytta = Client("Edytta  Halpirt", None, False)
+moma = Client("The MOMA", "New York", True)
